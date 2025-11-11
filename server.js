@@ -7,49 +7,43 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware
-// CORS configuration - allows frontend URL from environment or localhost in development
+// CORS configuration - CRITICAL: Must include OPTIONS and handle preflight
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
       process.env.FRONTEND_URL,
-      'https://mo-cypto-client.vercel.app',
+      process.env.APP_URL,
+      'https://mo-cypto-client.vercel.app', // TEMPORARY - hardcode to fix CORS
       'http://localhost:3000',
       'http://127.0.0.1:3000'
-    ].filter(Boolean); // Remove undefined values
-
-      // DEBUG: Log what we're checking
-    console.log('CORS Check - Origin:', origin);
-    console.log('CORS Check - Allowed Origins:', allowedOrigins);
-    console.log('CORS Check - FRONTEND_URL:', process.env.FRONTEND_URL);
-    console.log('CORS Check - APP_URL:', process.env.APP_URL);
+    ].filter(Boolean);
     
-    // Check if origin is in allowed list or matches pattern
     if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
       callback(null, true);
     } else {
-       callback(null, false);
+      callback(null, false); // Use false, NOT Error
     }
   },
-  credentials: true, // for JWT authentication
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // CRITICAL: Must include OPTIONS
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Content-Type', 'Authorization'],
-  maxAge: 86400, // 24 hours
-  optionsSuccessStatus: 200 // Some browsers need 200 instead of 204
+  maxAge: 86400,
+  optionsSuccessStatus: 200
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
 
-// Explicitly handle OPTIONS requests (critical for preflight)
+// CRITICAL: Explicitly handle OPTIONS requests for all routes
 app.options('*', cors(corsOptions));
 
-app.use(express.json());// lets express understand json, otherwise req.body would be undefined.
+app.use(express.json());
 
-// Serve static files (memes images)
+// Serve static files
 app.use('/uploads', express.static('./public/uploads'));
 
 // Routes
@@ -59,7 +53,6 @@ app.use('/api/dashboard', require('./routes/dashboard/dashboard'));
 app.use('/api/feedback', require('./routes/feedback'));
 app.use('/api/profile', require('./routes/profile'));
 
-
 mongoose.connect(process.env.MONGODB_URI )
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection error:', err));
@@ -68,4 +61,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
