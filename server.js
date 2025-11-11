@@ -20,6 +20,12 @@ const corsOptions = {
       'http://localhost:3000',
       'http://127.0.0.1:3000'
     ].filter(Boolean); // Remove undefined values
+
+      // DEBUG: Log what we're checking
+    console.log('CORS Check - Origin:', origin);
+    console.log('CORS Check - Allowed Origins:', allowedOrigins);
+    console.log('CORS Check - FRONTEND_URL:', process.env.FRONTEND_URL);
+    console.log('CORS Check - APP_URL:', process.env.APP_URL);
     
     // Check if origin is in allowed list or matches pattern
     if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
