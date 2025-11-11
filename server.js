@@ -21,6 +21,9 @@ const corsOptions = {
       'http://127.0.0.1:3000'
     ].filter(Boolean);
     
+    console.log('CORS Origin Check:', origin);
+    console.log('Allowed Origins:', allowedOrigins);
+    
     if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
       callback(null, true);
     } else {
@@ -35,11 +38,20 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+// CRITICAL: Handle OPTIONS requests FIRST, before CORS middleware
+app.options('*', (req, res) => {
+  console.log('OPTIONS request received:', req.path);
+  console.log('Origin:', req.headers.origin);
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '86400');
+  res.sendStatus(200);
+});
+
 // Apply CORS middleware
 app.use(cors(corsOptions));
-
-// CRITICAL: Explicitly handle OPTIONS requests for all routes
-app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
