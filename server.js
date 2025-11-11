@@ -31,17 +31,21 @@ const corsOptions = {
     if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+       callback(null, false);
     }
   },
   credentials: true, // for JWT authentication
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Content-Type', 'Authorization'],
-  maxAge: 60, // 60 seconds
+  maxAge: 86400, // 24 hours
+  optionsSuccessStatus: 200 // Some browsers need 200 instead of 204
 };
 
 app.use(cors(corsOptions));
+
+// Explicitly handle OPTIONS requests (critical for preflight)
+app.options('*', cors(corsOptions));
 
 app.use(express.json());// lets express understand json, otherwise req.body would be undefined.
 
