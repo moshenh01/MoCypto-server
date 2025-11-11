@@ -16,7 +16,7 @@ const corsOptions = {
     
     const allowedOrigins = [
       process.env.FRONTEND_URL,
-      process.env.APP_URL,
+      'https://mo-cypto-client.vercel.app',
       'http://localhost:3000',
       'http://127.0.0.1:3000'
     ].filter(Boolean); // Remove undefined values
