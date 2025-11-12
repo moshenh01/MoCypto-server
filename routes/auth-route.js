@@ -44,10 +44,10 @@ router.post('/signup', async (req, res) => {
     const user = new User({
       name: name.trim(),
       email: sanitizedEmail,
-      passwordHash: password, // Will be hashed by pre-save hook
+      passwordHash: password, 
     });
 
-    // the hashing id done in user with 10 rounds of salt
+    // the hashing id done in User.js with 10 rounds of salt
     await user.save();
 
     // Generate token

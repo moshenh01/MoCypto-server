@@ -32,7 +32,7 @@ const cachedNewsSchema = new mongoose.Schema({
   },
 });
 
-// TTL index - auto-delete documents after 1 hour (longer than cache TTL to allow expired cache usage)
+// TTL index - auto-delete documents after 1 hour 
 // delete the news chache after 1 hours
 cachedNewsSchema.index({ fetchedAt: 1 }, { expireAfterSeconds: 1 * 60 * 60 });
 

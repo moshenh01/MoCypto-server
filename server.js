@@ -32,7 +32,7 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Content-Type', 'Authorization'],
-  maxAge: 60, // 60 seconds
+  maxAge: 3600, // 1 hour, 60s in dev.
 };
 
 app.use(cors(corsOptions));

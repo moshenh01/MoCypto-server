@@ -17,6 +17,19 @@ router.get('/', auth, async (req, res) => {
 router.put('/', auth, async (req, res) => {
   try {
     const { assets, investorType, contentTypes } = req.body;
+    // Validate assets is an array
+    if (!Array.isArray(assets)) {
+      return res.status(400).json({ message: 'Assets must be an array' });
+    }
+
+    // Validate contentTypes is an array
+    if (!Array.isArray(contentTypes)) {
+      return res.status(400).json({ message: 'Content types must be an array' });
+    }
+    // Validate investorType is a string
+    if (typeof investorType !== 'string') {
+      return res.status(400).json({ message: 'Investor type must be a string' });
+    }
 
     
     const user = await User.findById(req.user._id);

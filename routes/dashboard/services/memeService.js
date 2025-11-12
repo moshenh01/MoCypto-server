@@ -1,5 +1,4 @@
 // Static memes data
-// Images are served from /uploads/images/ via Express static middleware (located in server/public/uploads/images/)
 const cryptoMemes = [
   { id: '1', url: '/uploads/images/meme1.png', title: 'Watching market dump 30% after you shilled #BTC ETF to your entire family last week' },
   { id: '2', url: '/uploads/images/meme2.png', title: 'Bitcoin memes 2025' },
